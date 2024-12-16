@@ -3,27 +3,29 @@ package kp.ran.retrofitjetpackexpl
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import kp.ran.retrofitjetpackexpl.ui.theme.RetrofitJetpackExplTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            var result: WeatherDetails by remember {    mutableStateOf(WeatherDetails())   }
 
-            val mainViewModel by viewModels<MainViewModel>()
-            mainViewModel.getMovieList()
-
-            Text(text = ""+ mainViewModel.result.data?.get(0)?.first_name)
-
+            runBlocking {
+                result = David.getInstance().getWeatherByCity("chennai",
+                    "a6ea090d1f474d6abdee5db6552ff501"
+                    )
+            }
+            Text(
+                text = ""+ result.weather?.get(0)?.description.toString(),fontSize = 32.sp
+            )
         }
     }
 }
-
+// Retrofit API call
